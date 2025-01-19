@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search me! Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto mt-20">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div class="text-left">
+                <h1 class="text-4xl font-bold mb-4">Search me! makes it easy to enjoy what matters most in your world.</h1>
+                <p class="text-lg">Best in class Search me! Mail, breaking local, national and global news, finance, sports, music, movies and more. You get more out of the web, you get more out of life.</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-8">
+                <div class="flex justify-end mb-6">
+                    <a href="#" class="text-sm font-medium text-gray-500 hover:text-gray-700">Help</a>
+                    <a href="#" class="text-sm font-medium text-gray-500 hover:text-gray-700 mx-4">Terms</a>
+                    <a href="#" class="text-sm font-medium text-gray-500 hover:text-gray-700">Privacy</a>
+                </div>
+                <div class="flex justify-center mb-4">
+                    <img src="https://th.bing.com/th/id/OIP.nRfDgLRBP0xBCBl5qj55fwHaHa?w=480&h=480&rs=1&pid=ImgDetMain" alt="Search me!" class="h-12">
+                </div>
+                <h2 class="text-2xl font-bold mb-4">Sign in</h2>
+                <p class="text-gray-600 mb-6">using your Search me! account</p>
+                <form>
+                    <div class="mb-4">
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email or Phone</label>
+                        <input type="text" id="email" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring focus:ring-blue-500" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" id="password" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring focus:ring-blue-500" required>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-purple-700">Sign In</button>
+                </form>
+                <div class="mt-4 text-center">
+                    <a href="#" class="text-sm text-purple-700 hover:underline">Forgot password?</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // This code creates a simple login form with a button to submit credentials.
+// It simulates a user's login attempt and provides feedback based on the entered email address.
+// It also provides options to create a new account or sign in with Google.
+
+// Get the necessary elements from the HTML document
+const loginForm = document.getElementById('loginForm');
+const emailInput = document.getElementById('emailInput');
+const loginButton = document.getElementById('loginButton');
+const errorSpan = document.getElementById('errorSpan');
+const createAccountButton = document.getElementById('createAccountButton');
+const googleSignInButton = document.getElementById('googleSignInButton');
+
+// Event listener for the login button
+loginButton.addEventListener('click', (event) => {
+  event.preventDefault(); // Prevent default form submission
+
+  // Check if the entered email address is valid
+  const enteredEmail = emailInput.value.trim();
+  if (enteredEmail === 'valid@email.com') {
+    // Redirect to the user's dashboard or other page
+    window.location.href = 'dashboard.html';
+  } else {
+    // Show error message
+    errorSpan.textContent = 'Sorry, we don\'t recognize this email.';
+  }
+});
+
+// Event listener for the create account button
+createAccountButton.addEventListener('click', (event) => {
+  event.preventDefault(); // Prevent default form submission
+
+  // Redirect to the account creation page
+  window.location.href = 'create-account.html';
+});
+
+// Event listener for the Google sign-in button
+googleSignInButton.addEventListener('click', (event) => {
+  event.preventDefault(); // Prevent default form submission
+
+  // Simulate Google sign-in process and redirect to the user's dashboard
+  // Replace this with actual Google Sign-In API integration
+  window.location.href = 'dashboard.html';
+});
+    </script>
+</body>
+</html>

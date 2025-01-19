@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <br>
+    <br>
+    <br>
+    <br>
+    <title>Search me!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Toggle main menu function
+        function toggleMenu() {
+            const menu = document.getElementById('dropdownMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Toggle assistant menu function
+        function toggleAssistantMenu() {
+            const menu = document.getElementById('assistantDropdownMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Toggle assistant section
+        function toggleAssistantSection() {
+            const section = document.getElementById('assistantSection');
+            section.classList.toggle('hidden');
+        }
+
+        // Search function
+        function searchFunction() {
+            const query = document.getElementById('searchBar').value.trim();
+            if (query) {
+                const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+                window.location.href = searchUrl;
+            }
+        }
+
+        // Voice search function
+        function voiceSearchFunction() {
+            if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+                alert('Voice search is not supported in this browser. Please try a different browser.');
+                return;
+            }
+
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'en-US';
+            recognition.start();
+
+            recognition.onresult = (event) => {
+                const spokenText = event.results[0][0].transcript;
+                document.getElementById('searchBar').value = spokenText;
+                searchFunction();
+            };
+
+            recognition.onerror = () => alert('Voice search failed. Please try again.');
+        }
+        // Add these functions here
+function openImageSearch() {
+    const imageInput = document.getElementById('imageInput');
+    imageInput.click();
+}
+
+function closeImagePreview() {
+    const previewContainer = document.getElementById('imagePreviewContainer');
+    const imagePreview = document.getElementById('imagePreview');
+    const searchResults = document.getElementById('searchResults');
+    
+    previewContainer.classList.add('hidden');
+    imagePreview.src = '';
+    searchResults.innerHTML = '';
+}
+
+function handleImageUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+        alert('Please upload an image file');
+        return;
+    }
+
+    const reader = new FileReader();
+    const previewContainer = document.getElementById('imagePreviewContainer');
+    const imagePreview = document.getElementById('imagePreview');
+    const searchResults = document.getElementById('searchResults');
+
+    reader.onload = function(e) {
+        previewContainer.classList.remove('hidden');
+        imagePreview.src = e.target.result;
+        simulateImageAnalysis(searchResults);
+    };
+
+    reader.readAsDataURL(file);
+}
+
+function simulateImageAnalysis(resultsElement) {
+    resultsElement.innerHTML = '<div class="animate-pulse"><div class="mb-4">Analyzing image...</div><div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div><div class="h-4 bg-gray-200 rounded w-1/2"></div></div>';
+
+    setTimeout(() => {
+        resultsElement.innerHTML = `
+            <div class="space-y-4">
+                <div class="font-medium">Potential matches found:</div>
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="searchForTerm('detected object 1')" 
+                            class="p-2 text-sm bg-purple-100 hover:bg-purple-200 rounded-lg transition">
+                        Search: "detected object 1"
+                    </button>
+                    <button onclick="searchForTerm('detected object 2')" 
+                            class="p-2 text-sm bg-purple-100 hover:bg-purple-200 rounded-lg transition">
+                        Search: "detected object 2"
+                    </button>
+                </div>
+                <div class="text-sm text-gray-500 mt-4">
+                    Click on a suggestion to search
+                </div>
+            </div>
+        `;
+    }, 2000);
+}
+
+function searchForTerm(term) {
+    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(term)}`;
+    window.location.href = searchUrl;
+}
+        // Process assistant request
+        function processAssistantRequest() {
+            const input = document.getElementById('assistantInput').value.trim();
+            const responseDiv = document.getElementById('assistantResponse');
+            const responses = {
+    
+                'hello': 'Hello! How can I assist you today?',
+                'joke': 'Why did the scarecrow win an award? Because he was outstanding in his field!',
+                'time': `The current time is ${new Date().toLocaleTimeString()}.`,
+                'date': `Today\'s date is ${new Date().toLocaleDateString()}.`,
+                'your name': 'I am your virtual assistant. You can call me Assistant!',
+                'news': 'I cannot fetch the latest news, but you can check a news website!',
+                'trending': 'Currently trending topics include technology advancements, climate change discussions, and new movie releases!',
+                'who is the president': 'The current president of the United States is Joe Biden.',
+                'what is ai': 'AI, or artificial intelligence, refers to the simulation of human intelligence in machines.',
+                'tell me about space': 'Space is the vast, seemingly infinite expanse that exists beyond Earth and its atmosphere.',
+                'favorite color': 'I don’t have personal preferences, but I think blue is a popular favorite!',
+                'how are you': 'I am just a program, but I am here to help you!',
+                'what is javascript': 'JavaScript is a programming language commonly used in web development to create interactive effects within web browsers.',
+                'what is html': 'HTML, or HyperText Markup Language, is the standard markup language for creating web pages and web applications.',
+                'what is css': 'CSS, or Cascading Style Sheets, is a style sheet language used for describing the presentation of a document written in HTML or XML.',
+                'what is a server': 'A server is a computer or system that provides resources, data, services, or programs to other computers, known as clients, over a network.',
+                'what is cloud computing': 'Cloud computing is the delivery of computing services over the internet, allowing for on-demand access to resources like storage and processing power.',
+                'what is the capital of france': 'The capital of France is Paris.',
+                'what is the capital of france': 'The capital of France is Paris.',
+                'who wrote romeo and juliet': 'Romeo and Juliet was written by William Shakespeare.',
+                'what is the largest planet in our solar system': 'The largest planet in our solar system is Jupiter.',
+                'what is the smallest country in the world': 'The smallest country in the world is Vatican City.',
+                'who painted the mona lisa': 'The Mona Lisa was painted by Leonardo da Vinci.',
+                'what is the fastest land animal': 'The fastest land animal is the cheetah.',
+                'what is the boiling point of water': 'The boiling point of water is 100 degrees Celsius at sea level.',
+                'what is photosynthesis': 'Photosynthesis is the process by which green plants and some other organisms use sunlight to synthesize foods with the help of chlorophyll.',
+                'what is the internet': 'The internet is a global network of interconnected computers that communicate freely and share and exchange information.',
+                'what is a blockchain': 'A blockchain is a decentralized digital ledger that records transactions across many computers securely and transparently.',
+                'what is machine learning': 'Machine learning is a subset of artificial intelligence that enables systems to learn and improve from experience without being explicitly programmed.',
+                'what is a database': 'A database is an organized collection of structured information or data, typically stored electronically in a computer system.',
+                'what is a VPN': 'A VPN, or Virtual Private Network, is a service that encrypts your internet connection and hides your IP address to protect your online privacy.',
+                'what is a smartphone': 'A smartphone is a mobile phone that includes advanced features such as internet connectivity, a touchscreen interface, and the ability to run applications.',
+                'what is a web browser': 'A web browser is a software application used to access and view websites on the internet.',
+                'what is a video game': 'A video game is an electronic game that involves interaction with a user interface to generate visual feedback on a two- or three-dimensional display device.',
+                'what is augmented reality': 'Augmented reality (AR) is an interactive experience where real-world environments are enhanced by computer-generated perceptual information.',
+                'what is virtual reality': 'Virtual reality (VR) is a simulated experience that can be similar to or completely different from the real world, often using VR headsets.',
+                'what is a podcast': 'A podcast is a digital audio file made available on the internet for downloading, typically available as a series.',
+                'what is a blog': 'A blog is a discussion or informational website published on the World Wide Web consisting of discrete entries or posts.',
+                'what is a meme': 'A meme is a humorous image, video, or piece of text that is copied and spread rapidly by internet users, often with slight variations.',
+                'what is your favorite food': 'I don’t eat, but I hear pizza is a popular choice!',
+                'how do I make coffee': 'To make coffee, brew ground coffee beans with hot water, then enjoy it black or with milk and sugar.',
+                'what is a healthy breakfast': 'A healthy breakfast can include oatmeal, yogurt with fruit, or eggs with vegetables.',
+                'how can I lose weight': 'To lose weight, consider a balanced diet and regular exercise. It’s best to consult a healthcare professional for personalized advice.',
+                'what is the best way to learn a new language': 'The best way to learn a new language is through practice, immersion, and using language learning apps or classes.',
+                'how do I cook rice': 'To cook rice, rinse it, then boil it in water (usually 2 parts water to 1 part rice) until tender, about 15-20 minutes.',
+                'what are some good movies to watch': 'Some popular movies include "Inception," "The Shawshank Redemption," and "The Godfather."',
+                'what is the best way to travel': 'The best way to travel depends on your destination and budget. Options include flying, driving, or taking a train.',
+                'how do I stay organized': 'To stay organized, consider using a planner, setting reminders, and decluttering your space regularly.',
+                'what are some tips for studying': 'Some effective study tips include creating a study schedule, breaking material into smaller chunks, and practicing active recall.',
+                'how do I improve my sleep': 'To improve sleep, establish a regular sleep schedule, create a relaxing bedtime routine, and limit screen time before bed.',
+                'what is mindfulness': 'Mindfulness is the practice of being present and fully engaged in the moment, often through meditation or focused breathing.',
+                'how do I save money': 'To save money, create a budget, track your expenses, and set savings goals. Consider automating your savings as well.',
+                'what are some fun activities to do at home': 'Fun activities at home can include reading, cooking, crafting, or watching movies.',
+                'how do I deal with stress': 'To deal with stress, consider practicing relaxation techniques, exercising, or talking to someone about your feelings.',
+                'what is a good workout routine': 'A good workout routine includes a mix of cardio, strength training, and flexibility exercises. It’s best to find what you enjoy!',
+                'how do I make friends': 'To make friends, consider joining clubs or groups that interest you, volunteering, or attending social events.',
+                'what is a good book to read': 'Some popular books include "The Alchemist" by Paulo Coelho, "1984" by George Orwell, and "To Kill a Mockingbird" by Harper Lee.',
+                'how do I plan a vacation': 'To plan a vacation, decide on a destination, set a budget, book accommodations and transportation, and create an itinerary of activities.',
+                'what is the best way to relax': 'The best way to relax varies by person, but options include reading, meditating, taking a bath, or spending time in nature.',
+                'how do I improve my public speaking': 'To improve public speaking, practice regularly, know your material well, and consider joining a group like Toastmasters.',
+                'what are some healthy snacks': 'Healthy snacks can include fruits, nuts, yogurt, or vegetable sticks with hummus.',
+                'how do I make a smoothie': 'To make a smoothie, blend your choice of fruits, vegetables, yogurt, or milk until smooth. You can add ice for a colder texture.',
+                'what is a good way to start the day': 'A good way to start the day is with a healthy breakfast, some light stretching or exercise, and a moment of mindfulness or planning.',
+                'how do I improve my writing skills': 'To improve writing skills, practice regularly, read widely, and seek feedback from others.',
+                'what are some tips for job interviews': 'Some tips for job interviews include researching the company, practicing common interview questions, and dressing appropriately.',
+                'how do I stay motivated': 'To stay motivated, set clear goals, track your progress, and reward yourself for achievements.',
+                'what is a good way to learn cooking': 'A good way to learn cooking is to start with simple recipes, watch cooking shows or videos, and practice regularly.',
+                'how do I manage my time effectively': 'To manage time effectively, prioritize tasks, set deadlines, and use tools like calendars or to-do lists.',
+                'what are some fun games to play with friends': 'Fun games to play with friends include board games, card games, or video games, depending on your group’s interests.',
+                'how do I create a budget': 'To create a budget, list your income and expenses, categorize them, and set limits for each category to ensure you live within your means.',
+                'what is a good way to stay fit': 'A good way to stay fit is to engage in regular physical activity, eat a balanced diet, and stay hydrated.',
+                'how do I improve my mental health': 'To improve mental health, consider practicing self-care, seeking support from friends or professionals, and engaging in activities you enjoy.',
+                'what are some good habits to develop': 'Good habits to develop include regular exercise, healthy eating, reading, and maintaining a consistent sleep schedule.',
+                'how do I find a hobby': 'To find a hobby, explore your interests, try new activities, and consider what you enjoy doing in your free time.',
+                'what is a good way to celebrate a birthday': 'A good way to celebrate a birthday can include a party with friends, a special dinner, or a fun outing to a favorite place.',
+                'how do I stay informed about current events': 'To stay informed about current events, consider following reputable news sources, subscribing to newsletters, or using news apps.',
+                'what are some ways to give back to the community': 'Ways to give back to the community include volunteering, donating to local charities, or participating in community events.',
+                'how do I improve my financial literacy': 'To improve financial literacy, read books on personal finance, take online courses, and follow financial news and blogs.'  
+                // Add more responses as needed
+            };
+
+            const response = responses[input.toLowerCase()] || 'I am still learning. Please try asking something else.';
+            responseDiv.textContent = response;
+            speakResponse(response);
+        }
+
+        // Text-to-speech function
+        function speakResponse(response) {
+            const utterance = new SpeechSynthesisUtterance(response);
+            window.speechSynthesis.speak(utterance);
+        }
+    </script>
+</head>
+<body class="bg-white flex flex-col items-center justify-center min-h-screen text-gray-800">
+    <!-- Image Preview Container -->
+<div id="imagePreviewContainer" class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-xl z-50 w-full max-w-2xl">
+    <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-bold">Image Search</h3>
+        <button onclick="closeImagePreview()" class="p-2 rounded-full hover:bg-gray-100">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+    </div>
+    <div class="flex flex-col items-center">
+        <img id="imagePreview" class="max-w-full max-h-64 object-contain mb-4" alt="Preview" />
+        <div id="searchResults" class="w-full text-center text-gray-600"></div>
+    </div>
+</div>
+    <!-- Top Navigation -->
+    <div class="absolute top-4 right-4 flex items-center space-x-4">
+        <button onclick="toggleMenu()" class="p-2 rounded-full bg-gray-100 hover:bg-gray-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="5" cy="5" r="2" />
+                <circle cx="12" cy="5" r="2" />
+                <circle cx="19" cy="5" r="2" />
+                <circle cx="5" cy="12" r="2" />
+                <circle cx="12" cy="12" r="2" />
+                <circle cx="19" cy="12" r="2" />
+                <circle cx="5" cy="19" r="2" />
+                <circle cx="12" cy="19" r="2" />
+                <circle cx="19" cy="19" r="2" />
+            </svg>
+        </button>
+         <!-- Add Lens Button -->
+         <button onclick="openImageSearch()" class="p-2 rounded-full bg-gray-100 hover:bg-gray-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M3 9a9 9 0 0 1 9-9 9 9 0 0 1 9 9v12l-9-3-9 3V9z"/>
+            </svg>
+        </button>
+        <!-- Hidden file input for image upload -->
+        <input 
+            type="file" 
+            id="imageInput" 
+            accept="image/*" 
+            class="hidden" 
+            onchange="handleImageUpload(event)"
+        />
+        <!-- Image Preview Container -->
+        <div id="imagePreviewContainer" class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-xl z-50 w-full max-w-2xl">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold">Image Search</h3>
+            <button onclick="closeImagePreview()" class="p-2 rounded-full hover:bg-gray-100">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <div class="flex flex-col items-center">
+            <img id="imagePreview" class="max-w-full max-h-64 object-contain mb-4" alt="Preview" />
+            <div id="searchResults" class="w-full text-center text-gray-600"></div>
+        </div>
+    </div>
+        <button onclick="toggleAssistantSection()" class="p-2 rounded-full bg-gray-100 hover:bg-gray-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+        </button>
+        <button class="px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-full hover:bg-purple-700 focus:outline-none">
+            <a href="signin.html" class="button">Sign In</a>
+        </button>
+        
+    </div>
+
+    <!-- Main Dropdown Menu -->
+    <div id="dropdownMenu" class="hidden absolute top-16 right-4 bg-white shadow-md rounded-lg p-4 w-64 z-50">
+        <div class="grid grid-cols-3 gap-4">
+            <div class="flex flex-col items-center cursor-pointer hover:bg-gray-50 p-2 rounded">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M9 21V3m6 18V3" />
+                </svg>
+                <span class="text-sm text-gray-700">Home</span>
+            </div>
+            <div class="flex flex-col items-center cursor-pointer hover:bg-gray-50 p-2 rounded">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 4h-2v6h2zm0 8h-2v2h2z" />
+                </svg>
+                <span class="text-sm text-gray-700">Settings</span>
+            </div>
+            <div class="flex flex-col items-center cursor-pointer hover:bg-gray-50 p-2 rounded">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 14c-3.866 0-7 2.686-7 6h14c0-3.314-3.134-6-7-6zM12 2a5 5 0 110 10 5 5 0 010-10z" />
+                </svg>
+                <span class="text-sm text-gray-700">Profile</span>
+            </div>
+        </div>
+        <div class="grid grid-cols-3 gap-4 mb-6">
+            <button class="bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition" onclick="location.href='https://www.youtube.com'">YouTube</button>
+            <button class="bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition" onclick="location.href='https://mail.google.com'">Gmail</button>
+            <button class="bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition" onclick="location.href='https://docs.google.com'">Google Docs</button>
+        </div>
+    </div>
+
+    <!-- Logo -->
+    <div class="text-5xl font-bold text-purple-600 mb-8 mt-16">Search me!</div>
+
+    <!-- Search Bar -->
+    <div class="flex items-center w-full max-w-lg relative">
+        <input
+            type="text"
+            id="searchBar"
+            placeholder="Search the web"
+            class="flex-grow px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-600 pr-16"
+        />
+        <div class="absolute inset-y-0 right-0 flex items-center space-x-2 pr-2">
+            <button onclick="voiceSearchFunction()" class="p-2 rounded-full bg-gray-100 hover:bg-gray-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 1v10m0 4v2m-4 0h8" />
+                </svg>
+            </button>
+            <button onclick="searchFunction()" class="p-2 rounded-full bg-purple-600 hover:bg-purple-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Assistant Section -->
+    <div id="assistantSection" class="hidden fixed right-4 bottom-4 w-96 bg-white rounded-lg shadow-lg border border-gray-200">
+        <div class="p-4 border-b border-gray-200">
+            <div class="flex justify-between items-center">
+                <h2 class="text-xl font-bold text-gray-800">Assistant</h2>
+                <div class="flex space-x-2">
+                    <button onclick="toggleAssistantMenu()" class="p-2 rounded-full hover:bg-gray-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="1" />
+                            <circle cx="19" cy="12" r="1" />
+                            <circle cx="5" cy="12" r="1" />
+                        </svg>
+                    </button>
+                    <button onclick="toggleAssistantSection()" class="p-2 rounded-full hover:bg-gray-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assistant Dropdown Menu -->
+        <div id="assistantDropdownMenu" class="hidden absolute top-14 right-0 bg-white shadow-lg rounded-lg p-4 w-64 z-50">
+            <div class="grid grid-cols-2 gap-4">
+                <div class="flex flex-col items-center cursor-pointer hover:bg-gray-50 p-2 rounded">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 4h-2v6h2zm0 8h-2v2h2z" />
+                    </svg>
+                    <span class="text-sm text-gray-700">Help</span>
+                </div>
+                <div class="flex flex-col items-center cursor-pointer hover:bg-gray-50 p-2 rounded">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    <span class="text-sm text-gray-700">New Chat</span>
+                </div>
+                <div class="flex flex-col items-center cursor-pointer hover:bg-gray-50 p-2 rounded">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span class="text-sm text-gray-700">Tasks</span>
+                </div>
+                <div class="flex flex-col items-center cursor-pointer hover:bg-gray-50 p-2 rounded">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 14v5a2 2 0 01-2 2H7a2 2 0 01-2-2v-5" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    <span class="text-sm text-gray-700">Save</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4">
+            <div id="assistantResponse" class="text-gray-700 mb-4 min-h-[50px]">
+                How can I help you today?
+            </div>
+            <textarea 
+                id="assistantInput" 
+                placeholder="Ask me anything..." 
+                class="w-full border-2 border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-purple-600 
+                focus:border-transparent transition min-h-[100px] resize-none"
+                ></textarea>
+                <button 
+                    onclick="processAssistantRequest()" 
+                    class="mt-4 px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2"
+                >
+                    Send
+                </button>
+            </div>
+        </div>
+    
+        <!-- Trending Searches -->
+
+
+        <br>
+        <br>
+        <div class="grid grid-cols-3 gap-4 mb-6">
+            <button class="bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition" onclick="location.href='https://www.youtube.com'">YouTube</button>
+            <button class="bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition" onclick="location.href='https://mail.google.com'">Gmail</button>
+            <button class="bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition" onclick="location.href='https://docs.google.com'">Google Docs</button>
+        </div>
+    
+        <!-- Footer -->
+        <footer class="w-full mt-16 pb-8 bg-gray-100">
+            <div class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">About</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-600 hover:text-purple-600">About Search me!</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-purple-600">How it works</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-purple-600">Our team</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-purple-600">Careers</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Features</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-600 hover:text-purple-600">Voice Search</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-purple-600">Image Search</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-purple-600">AI Assistant</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-purple-600">Advanced Search</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Support</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-600 hover:text-purple-600">Help Center</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-purple-600">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-purple-600">Terms of Service</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-purple-600">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Connect</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-600 hover:text-purple-600">Twitter</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-purple-600">Facebook</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-purple-600">LinkedIn</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-purple-600">Instagram</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-200 mt-8">
+                <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-600 text-sm">&copy; 2025 Search me! All rights reserved.</p>
+                    <div class="flex space-x-4 mt-4 md:mt-0">
+                        <a href="#" class="text-gray-600 hover:text-purple-600 text-sm">Privacy</a>
+                        <a href="#" class="text-gray-600 hover:text-purple-600 text-sm">Terms</a>
+                        <a href="#" class="text-gray-600 hover:text-purple-600 text-sm">Settings</a>
+                    </div>
+                </div>
+            </div>
+        </footer>        
+    </body>
+    </html>
+    
+    
